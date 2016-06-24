@@ -14,9 +14,7 @@ begin
   loop do
     Thread.start(server.accept) do |client|
       remote = client.peeraddr[2]
-      if IO.select([client], [], [], timeout=0)
-        client.recv(512)
-      end
+      client.recv(512) if IO.select([client], [], [], 0)
       client.puts "#{remote}\n"
       logger.info("Client: #{remote}")
       client.close
